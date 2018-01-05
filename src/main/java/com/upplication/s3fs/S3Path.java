@@ -1,7 +1,6 @@
 package com.upplication.s3fs;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Splitter;
+import com.google.common.base.*;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.upplication.s3fs.attribute.S3BasicFileAttributes;
@@ -16,7 +15,7 @@ import java.nio.file.*;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Iterables.*;
 import static java.lang.String.format;
 
 public class S3Path implements Path {
