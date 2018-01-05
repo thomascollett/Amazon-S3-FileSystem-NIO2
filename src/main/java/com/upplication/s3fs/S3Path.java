@@ -1,6 +1,7 @@
 package com.upplication.s3fs;
 
-import com.google.common.base.*;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.upplication.s3fs.attribute.S3BasicFileAttributes;
@@ -15,7 +16,7 @@ import java.nio.file.*;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.google.common.collect.Iterables.*;
+import static com.google.common.collect.Iterables.concat;
 import static java.lang.String.format;
 
 public class S3Path implements Path {
@@ -55,6 +56,14 @@ public class S3Path implements Path {
         Preconditions.checkArgument(!first.startsWith("//"), "first path doesnt start with '//'. Miss bucket");
         // see tests com.upplication.s3fs.Path.EndsWithTest#endsWithRelativeBlankAbsolute()
         // Preconditions.checkArgument(!first.isEmpty(), "first path must be not empty");
+
+        try{
+            first = decode(new URI(first));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            System.out.println("S3Path exception: " + e.getMessage());
+        }
 
         boolean hasBucket = first.startsWith("/");
 
@@ -465,7 +474,7 @@ public class S3Path implements Path {
             return URI.create("s3://" + normalizeURI(builder.toString()));
         }
         else {
-            return URI.create(uri);
+            return URI.create(this.uri);
         }
     }
 
@@ -552,7 +561,11 @@ public class S3Path implements Path {
 
     @Override
     public String toString() {
-        return toUri().toString();
+        if (this.isAbsolute()) {
+            return toUri().toString();
+        } else {
+            return this.uri;
+        }
     }
 
     @Override
