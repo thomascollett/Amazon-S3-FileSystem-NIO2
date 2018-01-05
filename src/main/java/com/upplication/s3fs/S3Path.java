@@ -57,14 +57,6 @@ public class S3Path implements Path {
         // see tests com.upplication.s3fs.Path.EndsWithTest#endsWithRelativeBlankAbsolute()
         // Preconditions.checkArgument(!first.isEmpty(), "first path must be not empty");
 
-        try{
-            first = decode(new URI(first));
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            System.out.println("S3Path exception: " + e.getMessage());
-        }
-
         boolean hasBucket = first.startsWith("/");
 
 
