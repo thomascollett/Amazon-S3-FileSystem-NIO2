@@ -7,6 +7,7 @@ import com.upplication.s3fs.util.AmazonS3MockFactory;
 import com.upplication.s3fs.util.S3EndpointConstant;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,7 +100,19 @@ public class S3FileChannelTest extends S3UnitTestBase {
         channel.close();
 
         verify(channel, times(1)).implCloseChannel();
-        verify(client, times(1)).putObject(any(PutObjectRequest.class));
+        verify(client, times(1)).putObject(argThat(new ArgumentMatcher<PutObjectRequest>() {
+            @Override
+            public boolean matches(Object argument) {
+                PutObjectRequest request = (PutObjectRequest) argument;
+                if (!request.getKey().equals("file1")) {
+                    return false;
+                }
+                if (!request.getBucketName().equals("buck")) {
+                    return false;
+                }
+                return true;
+            }
+        }));
     }
 
     @Test(expected = FileAlreadyExistsException.class)
