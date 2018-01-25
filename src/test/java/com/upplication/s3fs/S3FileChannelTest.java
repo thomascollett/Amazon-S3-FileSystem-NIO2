@@ -1,6 +1,7 @@
 package com.upplication.s3fs;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.upplication.s3fs.util.AmazonS3ClientMock;
 import com.upplication.s3fs.util.AmazonS3MockFactory;
 import com.upplication.s3fs.util.S3EndpointConstant;
@@ -98,7 +99,7 @@ public class S3FileChannelTest extends S3UnitTestBase {
         channel.close();
 
         verify(channel, times(1)).implCloseChannel();
-        verify(client, times(1)).putObject(eq("buck"), eq("file1"), any(InputStream.class), any(ObjectMetadata.class));
+        verify(client, times(1)).putObject(any(PutObjectRequest.class));
     }
 
     @Test(expected = FileAlreadyExistsException.class)
